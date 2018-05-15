@@ -1,0 +1,142 @@
+CREATE TABLE user(ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, email VARCHAR(255), password VARCHAR(255),loginwith varchar(50), nickname varchar(50));
+create table groups(ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(255),
+description VARCHAR(255),
+createdByUser INT,
+FOREIGN KEY (createdByUser) REFERENCES user(ID)
+)ENGINE=InnoDB;
+
+create table groupMembers(ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+groupId INT,
+userId INT,
+FOREIGN KEY (userId) REFERENCES user(ID),
+FOREIGN KEY (groupId) REFERENCES groups(ID)
+)ENGINE=InnoDB;
+
+Alter table
+alter table products add column name varchar(20) after name;
+
+categories
+Rent
+Transportation
+Maintenance
+Electronics
+Food & drinks
+Groceries
+
+select * from transactions where month(createdAt) = 11;
+
+CREATE TABLE TRANSACTIONS(ID INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(255),
+userId INT,
+description VARCHAR(255),
+category VARCHAR(255),
+credit VARCHAR(20),
+debit double,
+createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (userId) REFERENCES user(ID)
+)ENGINE=InnoDB;
+// DESC Name not allowed
+
+
+CREATE TABLE BILL(ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+NAME VARCHAR(255),
+paidByUserId INT,
+AMOUNT double,
+groupId INT,
+craetedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (groupId) REFERENCES groups(ID),
+FOREIGN KEY (paidByUserId) REFERENCES user(ID)
+)ENGINE=InnoDB;
+
+CREATE TABLE oweToUser(ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+userId INT,
+oweToUserId INT,
+billId INT,
+amount double,
+createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (userId) REFERENCES user(ID),
+FOREIGN KEY (oweToUserId) REFERENCES user(ID),
+FOREIGN KEY (billId) REFERENCES BILL(ID)
+)ENGINE=InnoDB;
+
+Create table items(ID INT AUTO_INCREMENT PRIMARY KEY,
+ name varchar(100),
+ image varchar(150),
+ price double(10,2),
+ description varchar(200),
+ longDesc varchar(600) )
+
+create table user_addr(
+    ID INT NOT NULL PRIMARY KEY,
+    fname varchar(30),
+    lname varchar(30),
+    address varchar(255),
+    city varchar(40),
+    state varchar(40),
+    zip varchar(40),
+    country varchar(40),
+    phone varchar(20),
+    user_id INT NOT NULL,
+foreign key (user_id) references user(id)
+ON DELETE CASCADE
+)ENGINE = InnoDB;
+
+
+Query for join
+select * from user_addr join user ON user_addr.user_id = user.ID;
+
+select * from cart join products ON cart.item_id = products.id 
+
+cart table:
+create table cart(user_id INT NOT NULL,
+item_id INT NOT NULL,
+quantity INT DEFAULT 1,
+foreign key (user_id) references user(id),
+foreign key (item_id) references products(id)
+) ENGINE = InnoDB
+
+Copy from one db to other
+(copy from cartDB to orderDB)
+INSERT INTO copy SELECT * FROM original;
+CREATE TABLE copy LIKE original;
+ALTER TABLE copy DISABLE KEYS
+INSERT INTO copy SELECT * FROM original;
+ALTER TABLE copy ENABLE KEYS;
+ COpy from cart to order:
+ insert into order_item(item_id,quantity) select item_id,quantity from cart where user_id=15;
+with data pre existed
+insert into order_item(order_id,item_id,quantity) select 5,item_id,quantity from cart where user_id 15;
+
+SUM all the items
+select sum(quantity) from cart where user_id = 3;
+INSERT INTO copy SELECT * FROM original;
+
+ORDER table:
+
+create table orders(order_id INT AUTO_INCREMENT PRIMARY KEY,
+addr_id INT NOT NULL,
+user_id INT NOT NULL,
+orderDate  DATETIME DEFAULT NOW(),
+amount double,
+foreign key (addr_id) references user_addr(id),
+foreign key (user_id) references user(ID)
+)
+
+order_item TABLE:
+create table order_item(order_id INT NOT NULL,
+item_id INT NOT NULL,
+quantity INT,
+foreign key (order_id) references orders(order_id),
+foreign key (item_id) references products(id)
+)
+
+create table user_fb(
+    id varchar(256),
+    email varchar(100),
+    name varchar(256),
+    token varchar(256)
+)
+
+

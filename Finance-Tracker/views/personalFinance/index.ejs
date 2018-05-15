@@ -1,0 +1,16 @@
+aljsda
+<% var balance = 0 %>
+<% transactions.forEach(function(transaction){ %>
+    <% var temp_amount =0 %>
+    <%= transaction.name %> 
+    <%= transaction.desc %> 
+    <!-- <br> -->
+    <%= transaction.credit %> 
+    <!-- <br> -->
+    <%= transaction.debit %> 
+    <!-- <br> -->
+    <% temp_amount = transaction.credit - transaction.debit %>
+    <% balance= balance + temp_amount %>
+    <br>
+    <% }) %>
+    <%= balance %>

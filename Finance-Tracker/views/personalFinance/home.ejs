@@ -1,0 +1,332 @@
+<% include ../partials/header.ejs %>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">MAIN NAVIGATION</li>
+        <li class="active treeview">
+            <a href="#">
+              <i class="fa fa-dashboard"></i>
+              <span>Personal Finance</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+          </li>
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i>
+            <span>Groups </span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <% if(groups){ %>
+            <% groups.forEach((group) => { %> 
+              <li>
+                <a href="/group/<%= group.ID %>">
+                  <i class="fa fa-circle-o"></i> <%= group.name %>  </a>
+              </li>
+            <% }) %>
+            <% } %>
+            <li>
+                <a href="/group/new">
+                  <i class="fa fa-circle-o"></i> Create new group </a>
+              </li>
+
+          </ul>
+        </li>
+
+
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Personal Finance
+        <small>Control panel</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li>
+          <a href="#">
+            <i class="fa fa-dashboard"></i> Home</a>
+        </li>
+        <li class="active">Dashboard</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-lg-3  col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-aqua">
+            <div class="inner">
+              <p class="h1">$
+                <%= balance %>
+              </p>
+
+              <p>Net worth</p>
+            </div>
+
+            <a href="#" class="small-box-footer">More info
+              <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-green">
+            <div class="inner">
+              <p class="h3">$
+                <%= income %>
+              </p>
+
+              <p>Income</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info
+              <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+              <p class="h3">$
+                <%= expense %>
+              </p>
+
+              <p>Expenses</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-bag"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info
+              <i class="fa fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <!-- /.row -->
+      <% var Uncategoriezed = groceries = foodDrink = electronics = transportation = maintenance = utilities = 0 %>
+      <% transactions.forEach(function(transaction){ %>
+
+      <% if(transaction.category == "Groceries"){ %>
+      <% groceries += transaction.debit %>      
+      <% }else if(transaction.category == "Food and Drinks"){ %>
+        <% foodDrink += transaction.debit %>
+        <% }else if(transaction.category == "Electronics"){ %>
+          <% electronics += transaction.debit %>
+          <% }else if(transaction.category == "Transportation"){ %>
+            <% transportation += transaction.debit %>
+            <% }else if(transaction.category == "Maintenance"){ %>
+              <% maintenance += transaction.debit %>
+              <% }else if(transaction.category == "Utilities"){ %>
+                <% utilities += transaction.debit %>
+                <% }else if(transaction.category == "Choose category" || transaction.category == null){ %>
+                  <% Uncategoriezed += transaction.debit %>
+      <% } %>
+   <%  }) %>
+      <!-- Main row -->
+      <div class="row">
+        <!-- Left col -->
+        <section class="col-lg-7">
+          <!-- Map box -->
+          <div class="box box-success">
+              <div class="box-header">
+                  <i class="fa fa-comments-o"></i>
+    
+                  <h3 class="box-title"> Expenses </h3>
+
+                </div>
+            <canvas id="myChart" width="400" height="400"></canvas>
+          </div>
+          <!-- /.box -->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+        </section>
+          <script>
+            var ctx = document.getElementById("myChart").getContext('2d');
+
+            var myChart = new Chart(ctx, {
+              type: 'doughnut',
+              data :{
+                datasets: [{
+                    data: [<%= groceries %> , <%=foodDrink %>, <%= electronics%>, <%= transportation%>, <%= maintenance %>, <%=utilities %>,<%= Uncategoriezed %>],
+                    backgroundColor: ["#f56954","#00a65a","#f39c12","#00c0ef","#3c8dbc","#d2d6de"]
+                }],
+            
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                    'Groceries',
+                    'Food and Drinks',
+                    'Electronics',
+                    'Transportation',
+                    'Maintenance',
+                    'Utilities',
+                    'Uncategoriezed'
+
+                ]
+            
+            }
+            });
+          </script>
+
+          <section class="col-lg-5">
+              <div class="box">
+                  <div class="box-header">
+                    <h3 class="box-title">Expenses</h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <div class="box-body no-padding">
+                    <table class="table table-striped">
+                      <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th> Category </th>
+                      </tr>
+                      <% transactions.forEach((transaction)=>{ %>
+                        <% if(transaction.credit == null ){%>
+                          <tr>
+                              <td> <%= transaction.date %> </td>
+                              <td> <%= transaction.name %> </td>
+                              <td> $ <%= transaction.debit  %> </td>
+                              <td> <%= transaction.category %> </td>
+                              
+                            </tr>
+                          <% } %>
+                      <% }) %>
+                      
+                    </table>
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+          </section>
+
+          <section class="col-lg-5">
+              <!-- Map box -->
+              <div class="box box-success">
+                  <div class="box">
+                      <div class="box-header">
+                        <h3 class="box-title">Income</h3>
+                      </div>
+                      <!-- /.box-header -->
+                      <div class="box-body no-padding">
+                        <table class="table table-striped">
+                          <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                          </tr>
+                          <% transactions.forEach((transaction)=>{ %>
+                            <% if(transaction.debit == null ){%>
+                              <tr>
+                                  <td> <%= transaction.date %> </td>
+                                  <td> <%= transaction.name %> </td>
+                                  <td> $ <%= transaction.credit  %> </td>
+                                </tr>
+                              <% } %>
+                          <% }) %>
+                        </table>
+                      </div>
+                      <!-- /.box-body -->
+                    </div>
+            </section>
+          <section class="col-lg-7">
+              <div class="box box-primary">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Add new Expense</h3>
+                  </div>
+                  <!-- /.box-header -->
+                  <!-- form start -->
+                  <form role="form" action="/pf/expense" method="POST">
+                    <div class="box-body">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1"> Description </label>
+                        <input type="text" name="name" placeholder="Name"  class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Amount</label>
+                        <input type="text" name="debit" class="form-control" id="exampleInputPassword1" placeholder="Amount">
+                      </div>
+                      <div class="form-group">
+                          <label>Category</label>
+                          <select name = "category" class="form-control">
+
+                            <option>Choose category</option>
+                            <option>Groceries</option>
+                            <option>Food and Drinks</option>
+                            <option>Electronics</option>
+                            <option>Transportation</option>
+                            <option>Maintenance</option>
+                            <option>Utilities</option>
+                            
+                          </select>
+                        </div>
+
+                    </div>
+                    
+                    <div class="box-footer">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                  </form>
+                </div>
+              </section>
+              <!-- /.box-body -->
+              <section class="col-lg-7">
+                  <div class="box box-primary">
+                      <div class="box-header with-border">
+                        <h3 class="box-title">Add new Income</h3>
+                      </div>
+                      <!-- /.box-header -->
+                      <!-- form start -->
+                      <form role="form" action="/pf/income" method="POST">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="exampleInputEmail1"></label>
+                            <input type="text" name="name" placeholder="Name"  class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">Amount</label>
+                            <input type="text" name="credit" class="form-control" id="exampleInputPassword1" placeholder="Amount">
+                          </div>          
+                        </div>
+                        <!-- /.box-body -->
+          
+                        <div class="box-footer">
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                      </form>
+                    </div>
+                </section>
+
+
+
+        </div>
+      </div>
+      <!-- /.row (main row) -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+  <% transactions %>
+    <% include ../partials/footer.ejs %>

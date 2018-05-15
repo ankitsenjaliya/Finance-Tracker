@@ -1,0 +1,201 @@
+<% include ../partials/header.ejs %>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">MAIN NAVIGATION</li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Personal Finance</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                </li>
+                <li class="active treeview">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Groups </span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <% groups.forEach((group) => { %>
+                            <li>
+                                <a href="/group/<%= group.ID %>">
+                                    <i class="fa fa-circle-o"></i>
+                                    <%= group.name %>
+                                </a>
+                            </li>
+                            <% }) %>
+                                <li>
+                                    <a href="/group/new">
+                                        <i class="fa fa-circle-o"></i> Create new group </a>
+                                </li>
+
+                    </ul>
+                </li>
+
+
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Groups
+                <small>Control panel</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i> Home</a>
+                </li>
+                <li class="active">Dashboard</li>
+            </ol>
+            <section class="content">
+                <div class="row">
+                    <section class="col-lg-7">
+                        <div class="box">
+                            <div class="box-header">
+                                <h3 class="box-title"> Group Transactions </h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body no-padding">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <th> Date</th>
+                                        <th> Description </th>
+                                        <th> Paid By</th>
+                                        <th> Amount </th>
+                                    </tr>
+                                    <% bills.forEach((bill)=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= bill.date %>
+                                            </td>
+                                            <td>
+                                                <%= bill.NAME %>
+                                            </td>
+                                            <td>
+                                                <%= bill.nickname %>
+                                            </td>
+                                            <td>
+                                                <%= bill.AMOUNT %>
+                                            </td>
+
+                                        </tr>
+                                        <% }) %>
+                                </table>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                    </section>
+
+                    <section class="col-lg-5">
+                        <div class="box box-primary">
+                            <div class="box-header">
+                                <i class="ion ion-clipboard"></i>
+
+                                <h3 class="box-title">Group Members </h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
+                                <ul class="todo-list">
+                                    <% groupMembers.forEach((member) => { %>
+
+                                        <li>
+                                            <span class="text">
+                                                <%= member.nickname %>
+                                            </span>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="box-footer clearfix no-border">
+                                        <form action="/group/<%= groupId %>/newMember" method="post">
+                                            <div class="form-group">
+                                                <input type="email" class="form-control" name="email" placeholder="Email ID of user">
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <button type="submit" class="btn btn-primary">Add User</button>
+                                            </form> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.box -->
+                    </section>
+                    <section class="col-lg-7">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                  <h3 class="box-title">Add new bill</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <!-- form start -->
+                                <form role="form" action="/group/<%= groupId %>/bill" method="POST">
+                                  <div class="box-body">
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1"></label>
+                                      <input type="text" name="name" placeholder="Name"  class="form-control" id="exampleInputEmail1" placeholder="Bill place or description">
+                                    </div>
+                                    <div class="form-group">
+                                      <input type="text" name="amount" class="form-control" id="exampleInputPassword1" placeholder="Amount">
+                                    </div>          
+                                  </div>
+                                  <!-- /.box-body -->
+                    
+                                  <div class="box-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                  </div>
+                                </form>
+                              </div>
+                          </section>
+                          <section class="col-lg-5">
+                                <div class="box box-primary">
+                                    <div class="box-header">
+                                        <i class="ion ion-clipboard"></i>
+        
+                                        <h3 class="box-title"> Owing money </h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
+                                        <ul class="todo-list">
+                                            <% owestoArr.forEach((owesTo) => { %>
+        
+                                                <li>
+                                                    <span class="text">
+                                                        You owe $ <%= owesTo.amount %> to <%= owesTo.name %>
+                                                    </span>
+                                                </li>
+                                                <% }) %>
+                                        </ul>
+                                    </div>
+                                </section>
+                </div>
+        </section>
+
+    </div>
+
+    <#% groups.forEach(function(group){ %>
+        <#%=g roup.ID %>
+            <a href="/group/<#%= group.ID %>/addMember"> Add new Member to this group</a>
+            <#% }) %>
+
+                <% include ../partials/footer.ejs %>
